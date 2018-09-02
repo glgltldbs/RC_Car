@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.DataOutputStream;
@@ -20,11 +21,15 @@ import java.net.Socket;
 
 public class MainActivity extends AppCompatActivity {
     public EditText ip, port, tx_msg, rx_msg;
-    public Button connect_btn, disconnect_btn, send_btn;
+    public Button connect_btn, disconnect_btn, send_btn, send_up, send_down, send_left, send_right, send_stop;
+    public TextView vel, ang;
     public String msg, recv;
     public Socket socket;
+    public int veloc = 1500, servo = 1500;
+
 
     private Handler mHandler = new Handler();
+
     private DataOutputStream writeSocket;
     private InputStream input;
 
@@ -48,13 +53,20 @@ public class MainActivity extends AppCompatActivity {
         disconnect_btn = (Button)findViewById(R.id.disconnect_button);
         send_btn = (Button)findViewById(R.id.send_button);
 
+        send_up = (Button)findViewById(R.id.button);
+        send_down = (Button)findViewById(R.id.button2);
+        send_right = (Button)findViewById(R.id.button3);
+        send_left = (Button)findViewById(R.id.button4);
+        send_stop = (Button)findViewById(R.id.button5);
+
         //connect_btn 버튼 클릭 이벤트 설정
-       connect_btn.setOnClickListener(new View.OnClickListener() {
+        connect_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                        (new Connect()).start();
+                (new Connect()).start();
             }
-       });
+        });
+
         disconnect_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -63,26 +75,64 @@ public class MainActivity extends AppCompatActivity {
         });
 
         /*
-        * 단순히 SEND 버튼 클릭시, input_msg에 들어있는 글자를 송신하는 예제이다.
-        * 리모콘 제작시, 버튼을 여러개(방향키, 등)을 추가하여
-        * 각각의 버튼마다 어떤 메세지를 보낼 것인지 프로토콜을 정하면 된다.
-        * 예를 들어, 위쪽버튼, 아래쪽버튼, 왼쪽버튼, 오른쪽 버튼이 있다고 할 때,
-        * 위쪽버튼 클릭시 -> u 전송
-        * 아래쪽버튼 클릭시 -> d 전송
-        * 왼쪽버튼 클릭시 -> l 전송
-        * 오른쪽버튼 클릭시 -> r 전송
-        * 이라는 프로토콜을 정하여, MCU에서도 u를 입력 받았을 때 직진,
-        * d를 입력받았을 때 후진,
-        * l을 입력받았을 때 좌회전
-        * r을 입력받았을 때 우회전
-        * 등 프로토콜을 맞춰주면 된다.
-        * */
+         * 단순히 SEND 버튼 클릭시, input_msg에 들어있는 글자를 송신하는 예제이다.
+         * 리모콘 제작시, 버튼을 여러개(방향키, 등)을 추가하여
+         * 각각의 버튼마다 어떤 메세지를 보낼 것인지 프로토콜을 정하면 된다.
+         * 예를 들어, 위쪽버튼, 아래쪽버튼, 왼쪽버튼, 오른쪽 버튼이 있다고 할 때,
+         * 위쪽버튼 클릭시 -> u 전송
+         * 아래쪽버튼 클릭시 -> d 전송
+         * 왼쪽버튼 클릭시 -> l 전송
+         * 오른쪽버튼 클릭시 -> r 전송
+         * 이라는 프로토콜을 정하여, MCU에서도 u를 입력 받았을 때 직진,
+         * d를 입력받았을 때 후진,
+         * l을 입력받았을 때 좌회전
+         * r을 입력받았을 때 우회전
+         * 등 프로토콜을 맞춰주면 된다.
+         * */
         send_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view){
                 (new sendMessage()).start();
             }
         });
+
+        send_up.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view){
+                (new send_u()).start();
+            }
+        });
+
+        send_down.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view){
+                (new send_d()).start();
+            }
+        });
+
+        send_right.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view){
+                (new send_r()).start();
+            }
+        });
+
+        send_left.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view){
+                (new send_l()).start();
+            }
+        });
+
+        send_stop.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view){
+                (new send_s()).start();
+            }
+        });
+
+
+
     }
     //소켓 연결 클래스
     class Connect extends Thread {
@@ -137,6 +187,7 @@ public class MainActivity extends AppCompatActivity {
             try {
                 if (socket.isConnected()) {
                     socket.close();
+
                     mHandler.post(new Runnable() {
                         @Override
                         public void run() {
@@ -165,6 +216,169 @@ public class MainActivity extends AppCompatActivity {
                 byte[] msg = new byte[10240];
                 msg = tx_msg.getText().toString().getBytes();
                 writeSocket.write(msg,0, msg.length);
+                veloc = 1530;
+                mHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        // TODO Auto-generated method stub
+                        setToast("메세지 전송 성공");
+                    }
+                });
+            } catch (Exception e) {
+                final String recvInput = "메시지 전송에 실패하였습니다.";
+                Log.d("Message", e.getMessage());
+                mHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        // TODO Auto-generated method stub
+                        setToast(recvInput);
+                    }
+                });
+            }
+        }
+    }
+
+    class send_u extends Thread {
+        public void run() {
+            try {
+                if(veloc < 2000)
+                    veloc += 1;
+                String tx = "13 " + Integer.toString(veloc) + "0000";
+                byte[] msg = new byte[10240];
+                msg = tx.getBytes();
+                writeSocket.write(msg,0, msg.length);
+                //          vel.setText(Integer.toString(veloc));
+                mHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        // TODO Auto-generated method stub
+                        setToast("메세지 전송 성공");
+                    }
+                });
+            } catch (Exception e) {
+                final String recvInput = "메시지 전송에 실패하였습니다.";
+                Log.d("Message", e.getMessage());
+                mHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        // TODO Auto-generated method stub
+                        setToast(recvInput);
+                    }
+                });
+            }
+        }
+    }
+
+    class send_d extends Thread {
+        public void run() {
+            try {
+                if(veloc > 1000)
+                    veloc -= 1;
+                String tx = "13 " + Integer.toString(veloc) + "0000";
+                byte[] msg = new byte[10240];
+                msg = tx.getBytes();
+                writeSocket.write(msg,0, msg.length);
+                //        vel.setText(Integer.toString(veloc));
+                mHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        // TODO Auto-generated method stub
+
+                        setToast("메세지 전송 성공");
+                    }
+                });
+            } catch (Exception e) {
+                final String recvInput = "메시지 전송에 실패하였습니다.";
+                Log.d("Message", e.getMessage());
+                mHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        // TODO Auto-generated method stub
+                        setToast(recvInput);
+                    }
+                });
+            }
+        }
+    }
+
+    class send_l extends Thread {
+        public void run() {
+            try {
+                if(servo < 2500)
+                    servo += 500;
+
+                String tx = "12 " + Integer.toString(servo) + "0000";
+                byte[] msg = new byte[10240];
+                msg = tx.getBytes();
+                writeSocket.write(msg,0, msg.length);
+
+//                ang.setText(Integer.toString(servo));
+                mHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        // TODO Auto-generated method stub
+                        setToast("메세지 전송 성공");
+                    }
+                });
+            } catch (Exception e) {
+                final String recvInput = "메시지 전송에 실패하였습니다.";
+                Log.d("Message", e.getMessage());
+                mHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        // TODO Auto-generated method stub
+                        setToast(recvInput);
+                    }
+                });
+            }
+        }
+    }
+
+    class send_r extends Thread {
+        public void run() {
+            try {
+                if(servo > 500)
+                    servo -= 500;
+                String tx;
+                if(servo != 500)
+                    tx = "12 " + Integer.toString(servo) + "0000";
+                else
+                    tx = "12 05000000";
+                byte[] msg = new byte[10240];
+                msg = tx.getBytes();
+                writeSocket.write(msg,0, msg.length);
+                //              ang.setText(Integer.toString(servo));
+                mHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        // TODO Auto-generated method stub
+                        setToast("메세지 전송 성공");
+                    }
+                });
+            } catch (Exception e) {
+                final String recvInput = "메시지 전송에 실패하였습니다.";
+                Log.d("Message", e.getMessage());
+                mHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        // TODO Auto-generated method stub
+                        setToast(recvInput);
+                    }
+                });
+            }
+        }
+    }
+
+    class send_s extends Thread {
+        public void run() {
+            try {
+                veloc = 1500;
+                String tx = "13 " + Integer.toString(veloc) + "0000";
+                byte[] msg = new byte[10240];
+                msg = tx.getBytes();
+                writeSocket.write(msg,0, msg.length);
+                //            vel.setText(Integer.toString(veloc));
+
                 mHandler.post(new Runnable() {
                     @Override
                     public void run() {
