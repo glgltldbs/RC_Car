@@ -88,7 +88,8 @@ void serial(char* dev)
        fcntl(fd, F_SETFL, FNDELAY);
 
 	printf("start\n");
-#if 0
+	write(fd, "T=1\r\n",6);
+#if 1
        // poll 사용을 위한 준비
 
        poll_events.fd        = fd;
@@ -115,13 +116,16 @@ void serial(char* dev)
              {
                 usleep(1000);
 
-                write( fd, buf, cnt);
+                //write( fd, buf, cnt);
+		cnt = read(fd, rx_buf, 21);
 
                 printf( "data received - %d (%s)\n0x ", cnt, dev);
+#if 0
                 for(int i = 0;i < cnt; i++)
-                    printf("%x ",buf[i]);
+                    printf("%c ", rx_buf[i]);
                 printf("\n");
-
+#endif
+                printf("%s\n", rx_buf);
              }
              if ( poll_events.revents & POLLERR)      // event 가 에러?
              {
@@ -175,6 +179,8 @@ void serial(char* dev)
 	for(;;)
 	{
 		int temp;
+		read(fd, rx_buf, 21);
+		printf("rx_buf = %s\n", rx_buf);
 		temp = write(fd, buf, 21);
 		printf("write num = %d\n", temp);
 		printf("tx_buf = %s\n", buf);
