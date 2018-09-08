@@ -264,6 +264,12 @@ There are some problem to convert sdk-linux-am57xx-evm-04.03.00.05 to 05.00.00.1
 |FreeRTOS|Role of FreeRTOS Summary|[pdf](https://github.com/KOITT2/RC_Car/blob/master/cur_present/%EB%B3%B4%EB%93%9C%EC%B9%B4/%EC%9D%80%ED%83%9C%EC%98%81/%EC%9D%80%ED%83%9C%EC%98%81%20-%20FreeRTOS_%EC%A7%84%ED%96%89%20%EB%B0%A9%ED%96%A5.pdf)|
 |FreeRTOS|FreeRTOS Queue Summary|[pdf](https://github.com/KOITT2/RC_Car/blob/master/cur_present/%EB%B3%B4%EB%93%9C%EC%B9%B4/%EC%9D%80%ED%83%9C%EC%98%81/%EC%9D%80%ED%83%9C%EC%98%81%20-%20RTOS_queue.pdf)|
 |FreeRTOS|FreeRTOS Task Summary|[pdf](https://github.com/KOITT2/RC_Car/blob/master/cur_present/%EB%B3%B4%EB%93%9C%EC%B9%B4/%EC%9D%80%ED%83%9C%EC%98%81/%EC%9D%80%ED%83%9C%EC%98%81%20-%20RTOS_task.pdf)|
+|FreeRTOS|FreeRTOS Coding Style|[pdf](https://github.com/KOITT2/RC_Car/blob/master/cur_present/%EB%B3%B4%EB%93%9C%EC%B9%B4/%EC%9D%80%ED%83%9C%EC%98%81/%EC%9D%80%ED%83%9C%EC%98%81%20-%20RTOS_%EC%BD%94%EB%94%A9%20%EC%95%88%EB%82%B4%EC%84%9C.pdf)|
+|FreeRTOS|FreeRTOS Semaphore|[pdf](https://github.com/KOITT2/RC_Car/blob/master/cur_present/%EB%B3%B4%EB%93%9C%EC%B9%B4/%EC%9D%80%ED%83%9C%EC%98%81/%EC%9D%80%ED%83%9C%EC%98%81%20-%20RTOS_%EC%84%B8%EB%A7%88%ED%8F%AC%EC%96%B4.pdf)|
+|FreeRTOS|FreeRTOS SW Timer|[pdf](https://github.com/KOITT2/RC_Car/blob/master/cur_present/%EB%B3%B4%EB%93%9C%EC%B9%B4/%EC%9D%80%ED%83%9C%EC%98%81/%EC%9D%80%ED%83%9C%EC%98%81%20-%20RTOS_%EC%86%8C%ED%94%84%ED%8A%B8%EC%9B%A8%EC%96%B4%20%ED%83%80%EC%9D%B4%EB%A8%B8.pdf)|
+|FreeRTOS|FreeRTOS Event Group API|[pdf](https://github.com/KOITT2/RC_Car/blob/master/cur_present/%EB%B3%B4%EB%93%9C%EC%B9%B4/%EC%9D%80%ED%83%9C%EC%98%81/%EC%9D%80%ED%83%9C%EC%98%81%20-%20RTOS_%EC%9D%B4%EB%B2%A4%ED%8A%B8%20%EA%B7%B8%EB%A3%B9.pdf)|
+|FreeRTOS|FreeRTOS Stream Buffer|[pdf](https://github.com/KOITT2/RC_Car/blob/master/cur_present/%EB%B3%B4%EB%93%9C%EC%B9%B4/%EC%9D%80%ED%83%9C%EC%98%81/%EC%9D%80%ED%83%9C%EC%98%81%20-%20RTOS_%EC%8A%A4%ED%8A%B8%EB%A6%BC%20%EB%B2%84%ED%8D%BC.pdf)|
+|FreeRTOS|FreeRTOS Message Buffer|[pdf](https://github.com/KOITT2/RC_Car/blob/master/cur_present/%EB%B3%B4%EB%93%9C%EC%B9%B4/%EC%9D%80%ED%83%9C%EC%98%81/%EC%9D%80%ED%83%9C%EC%98%81%20-%20RTOS_%EB%A9%94%EC%8B%9C%EC%A7%80%20%EB%B2%84%ED%8D%BC.pdf)|
 
 - Wooseok Lee:			colre99@naver.com
 
