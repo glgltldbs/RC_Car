@@ -4,19 +4,20 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context=".MainActivity"
+    tools:layout_editor_absoluteY="81dp">
 
     <TextView
         android:id="@+id/ip_viewer"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginBottom="197dp"
-        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="10dp"
+        android:layout_marginEnd="225dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:text="IP Address"
-        app:layout_constraintBottom_toTopOf="@+id/recv_msg"
-        app:layout_constraintEnd_toStartOf="@+id/input_ip"
+        app:layout_constraintBottom_toTopOf="@+id/port_viewer"
+        app:layout_constraintEnd_toStartOf="@+id/cur_veloc"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -24,29 +25,29 @@
         android:id="@+id/port_viewer"
         android:layout_width="0dp"
         android:layout_height="42dp"
-        android:layout_marginBottom="57dp"
-        android:layout_marginEnd="13dp"
+        android:layout_marginBottom="75dp"
+        android:layout_marginEnd="228dp"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="59dp"
+        android:layout_marginTop="75dp"
         android:text="PORT"
-        app:layout_constraintBottom_toBottomOf="@+id/msg_viewer"
-        app:layout_constraintEnd_toStartOf="@+id/input_port"
+        app:layout_constraintBottom_toTopOf="@+id/disconnect_button"
+        app:layout_constraintEnd_toStartOf="@+id/cur_angle"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/input_ip" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/msg_viewer"
         android:layout_width="0dp"
-        android:layout_height="49dp"
-        android:layout_marginBottom="67dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="19dp"
         android:layout_marginEnd="13dp"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="63dp"
+        android:layout_marginTop="8dp"
         android:text="message "
-        app:layout_constraintBottom_toBottomOf="@+id/connect_button"
+        app:layout_constraintBottom_toTopOf="@+id/connect_button"
         app:layout_constraintEnd_toStartOf="@+id/input_msg"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/input_ip" />
+        app:layout_constraintTop_toBottomOf="@+id/port_viewer" />
 
     <EditText
         android:id="@+id/input_ip"
@@ -56,7 +57,7 @@
         android:layout_marginTop="16dp"
         android:ems="10"
         android:inputType="textPersonName"
-        android:text="192.168.1.64"
+        android:text="192.168.43.1"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/ip_viewer"
         app:layout_constraintTop_toTopOf="parent" />
@@ -66,48 +67,48 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="63dp"
-        android:layout_marginTop="13dp"
         android:ems="10"
         android:inputType="textPersonName"
-        android:text="8080"
+        android:text="7777"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/port_viewer"
-        app:layout_constraintTop_toBottomOf="@+id/input_ip" />
+        app:layout_constraintTop_toTopOf="@+id/port_viewer" />
 
     <EditText
         android:id="@+id/input_msg"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="63dp"
-        android:layout_marginTop="4dp"
+        android:layout_marginTop="3dp"
         android:ems="10"
         android:inputType="textPersonName"
-        android:text="message"
+        android:text="13 1530"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/msg_viewer"
         app:layout_constraintTop_toBottomOf="@+id/input_port" />
 
     <Button
         android:id="@+id/connect_button"
-        android:layout_width="89dp"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="21dp"
+        android:layout_marginEnd="17dp"
         android:layout_marginStart="16dp"
         android:text="Connect"
         app:layout_constraintBottom_toTopOf="@+id/recv_msg"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_chainStyle="packed" />
+        app:layout_constraintEnd_toStartOf="@+id/disconnect_button"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <Button
         android:id="@+id/disconnect_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="1dp"
         android:layout_marginEnd="13dp"
-        android:layout_marginTop="22dp"
         android:text="Disconnect"
+        app:layout_constraintBottom_toBottomOf="@+id/connect_button"
         app:layout_constraintEnd_toStartOf="@+id/send_button"
-        app:layout_constraintTop_toBottomOf="@+id/input_msg" />
+        app:layout_constraintStart_toEndOf="@+id/connect_button" />
 
     <Button
         android:id="@+id/send_button"
@@ -116,20 +117,89 @@
         android:layout_marginEnd="51dp"
         android:text="SEND"
         app:layout_constraintBaseline_toBaselineOf="@+id/disconnect_button"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/disconnect_button" />
 
     <EditText
         android:id="@+id/recv_msg"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="12dp"
+        android:layout_marginBottom="15dp"
         android:ems="10"
         android:inputType="textMultiLine"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/button"
         app:layout_constraintEnd_toStartOf="@+id/disconnect_button"
-        app:layout_constraintHorizontal_bias="0.558"
-        app:layout_constraintStart_toStartOf="@+id/disconnect_button"
-        app:layout_constraintTop_toBottomOf="@+id/connect_button" />
+        app:layout_constraintStart_toStartOf="@+id/disconnect_button" />
+
+    <Button
+        android:id="@+id/button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="10dp"
+        android:text="UP"
+        app:layout_constraintBottom_toTopOf="@+id/button3"
+        app:layout_constraintEnd_toStartOf="@+id/button3" />
+
+    <Button
+        android:id="@+id/button2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="41dp"
+        android:text="DOWN"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/button3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="3dp"
+        android:layout_marginStart="10dp"
+        android:text="RIGHT"
+        app:layout_constraintBottom_toTopOf="@+id/button2"
+        app:layout_constraintStart_toEndOf="@+id/button2" />
+
+    <Button
+        android:id="@+id/button4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="10dp"
+        android:layout_marginTop="1dp"
+        android:text="LEFT"
+        app:layout_constraintEnd_toStartOf="@+id/button"
+        app:layout_constraintTop_toBottomOf="@+id/button" />
+
+    <Button
+        android:id="@+id/button5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginTop="1dp"
+        android:text="STOP"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/send_button" />
+
+    <TextView
+        android:id="@+id/cur_angle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="31dp"
+        android:text="1500"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/port_viewer"
+        app:layout_constraintTop_toTopOf="@+id/input_port" />
+
+    <TextView
+        android:id="@+id/cur_veloc"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="12dp"
+        android:layout_marginEnd="31dp"
+        android:text="1500"
+        app:layout_constraintBottom_toTopOf="@+id/cur_angle"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/ip_viewer" />
 
 
 </android.support.constraint.ConstraintLayout>
