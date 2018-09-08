@@ -209,6 +209,11 @@ There are some problem to convert sdk-linux-am57xx-evm-04.03.00.05 to 05.00.00.1
 |Icon|Icon Design|[link](https://github.com/glgltldbs/RC_Car/tree/master/experiment/dsp/icon)|
 |MCU|Cortex-R5F Based LCD Control Additional Work|[pdf](https://github.com/KOITT2/RC_Car/blob/master/experiment/doc/mcu_lcd/LCD_MCU2.pdf)|
 |FPGA|MPU9250 with Timer|[link](https://github.com/KOITT2/RC_Car/tree/master/fpga_proj/mpu9250_time)|
+|FPGA|Fork Based Integrated Code|[link](https://github.com/KOITT2/RC_Car/tree/master/fpga_proj/fork_base/all_test)|
+|FPGA|Thread Based Integrated Code|[link](https://github.com/KOITT2/RC_Car/tree/master/fpga_proj/all_test)|
+|FPGA|FPGA Based SPI Control|[pdf](https://github.com/KOITT2/RC_Car/tree/master/fpga_proj/spi_master_system)|
+|FPGA|Petalinux Based Autorun Configuration|[pdf](https://github.com/KOITT2/RC_Car/blob/master/experiment/doc/petalinux_autorun.pdf)|
+|FPGA|FPGA Based MPU9250 Control|[pdf](https://github.com/KOITT2/RC_Car/blob/master/experiment/doc/fpga_MPU9250/MPU9250_AutoRun.pdf)|
 
 - Hanbyul Jung:			hanbulkr@gmail.com
 
