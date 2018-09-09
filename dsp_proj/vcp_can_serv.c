@@ -31,10 +31,17 @@ char sock_buf[BUF_SIZE] = {0};
 
 pthread_mutex_t mtx;
 
+#if 0
 char can_tx_buf[22] = {'x', '1',
 					   32,  32, '1', 32, '2', 32, '3', 32, '7',
 					   0,   0,  0,   0,   0,  0,  0,   0,  0,
 					   '\r', '\n'};
+#endif
+
+char can_tx_buf[22] = {'x', '1',
+                       32,  32, '1', 32, '2', 32, '3', 32, '7',
+                       32,  32,  32, 32, 32,  32, 32,  32, 32,
+                       '\r', '\n'};
 
 
 void err_handler(char *msg)
@@ -59,7 +66,7 @@ void printf_can_arr(char *buf, int num)
 	printf("can buf = ");
 
 	for(i = 0; i < num; i++)
-		printf("%3x", buf[i]);
+		printf("%3c", buf[i]);
 
 	printf("\n");
 }
@@ -81,15 +88,15 @@ void set_bldc_vcp_tx_buf(char *buf, char *tx_buf, int protocol)
 
 	//memmove(temp, &buf[2], 4);
 
-	tx_buf[4] = protocol;
+	tx_buf[4] = 'd';
 	tx_buf[5] = 32;
-	tx_buf[6] = buf[2];
+	tx_buf[6] = buf[1];
 	tx_buf[7] = 32;
-	tx_buf[8] = buf[3];
+	tx_buf[8] = buf[2];
 	tx_buf[9] = 32;
-	tx_buf[10] = buf[4];
+	tx_buf[10] = buf[3];
 	tx_buf[11] = 32;
-	tx_buf[12] = buf[5];
+	tx_buf[12] = buf[4];
 
 	printf_can_arr(tx_buf, 22);
 }
@@ -102,15 +109,16 @@ void set_servo_vcp_tx_buf(char *buf, char *tx_buf, int protocol)
 	//memmove(temp, &buf[2], 3);
 	//if(atoi(temp))
 
-	tx_buf[4] = protocol;
+	tx_buf[3] = 32;
+	tx_buf[4] = 'c';
 	tx_buf[5] = 32;
-	tx_buf[6] = buf[0];
+	tx_buf[6] = buf[1];
 	tx_buf[7] = 32;
-	tx_buf[8] = buf[1];
+	tx_buf[8] = buf[2];
 	tx_buf[9] = 32;
-	tx_buf[10] = buf[2];
+	tx_buf[10] = buf[3];
 	tx_buf[11] = 32;
-	tx_buf[12] = buf[3];
+	tx_buf[12] = buf[4];
 
 	printf_can_arr(tx_buf, 22);
 }
@@ -120,9 +128,10 @@ void set_winker_vcp_tx_buf(char *buf, char *tx_buf, int protocol)
 	int i;
 	char temp[16] = {0};
 
-	tx_buf[4] = protocol;
+	tx_buf[3] = 32;
+	tx_buf[4] = '7';
 	tx_buf[5] = 32;
-	tx_buf[6] = buf[2];
+	tx_buf[6] = buf[0];
 
 	printf_can_arr(tx_buf, 22);
 }
@@ -206,7 +215,7 @@ void *phone_rx(void *fd)
 
 			pthread_mutex_unlock(&mtx);
 
-			sleep(1);
+			usleep(1000);
 		}
 	}
 }
@@ -226,12 +235,16 @@ void *vcp_can_tx(void *fd)
 	char temp[BUF_SIZE] = {0};
 	char data[BUF_SIZE] = {0};
 
+	write(usb2can, "T=1\r\n",5);
+
 	for(;;)
 	{
 		pthread_mutex_lock(&mtx);
 
 		memcpy(temp, sock_buf, 2);
-		memcpy(data, &sock_buf[2], 4);
+		memcpy(data, &sock_buf[2], 5);
+
+		printf("data = %c, %c, %c, %c, %c\n", data[0], data[1], data[2], data[3], data[4]);
 
 		switch(atoi(temp))
 		{
@@ -240,20 +253,30 @@ void *vcp_can_tx(void *fd)
 			case 1:
 				break;
 			case 7:
+			    printf("(7) Winker\n");
+			    set_winker_vcp_tx_buf(data, can_tx_buf, 7);
+			    write(usb2can, can_tx_buf, 21);
+			    memset(&can_tx_buf[5], 0x0, 8);
 				break;
 			case 12:
 				set_servo_vcp_tx_buf(data, can_tx_buf, 12);
 				write(usb2can, can_tx_buf, 21);
 				printf("(12) Servo\n");
+				//printf_can_arr(can_tx_buf, 22);
 				memset(&can_tx_buf[5], 0x0, 8);
 				break;
 			case 13:
+				set_bldc_vcp_tx_buf(data, can_tx_buf, 13);
+				write(usb2can, can_tx_buf, 21);
+				printf("(13) BLDC\n");
+				//printf_can_arr(can_tx_buf, 22);
+				memset(&can_tx_buf[5], 0x0, 8);
 				break;
 		}
 
 		pthread_mutex_unlock(&mtx);
 
-		sleep(1);
+		usleep(1000);
 	}
 }
 
