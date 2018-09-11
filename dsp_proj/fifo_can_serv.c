@@ -29,6 +29,13 @@ socklen_t addr_size;
 
 char sock_buf[BUF_SIZE] = {0};
 
+int fpga_sock;
+si fpga_serv_addr;
+si fpga_clnt_addr;
+socklen_t fpga_addr_size;
+
+char fpga_sock_buf[BUF_SIZE] = {0};
+
 pthread_mutex_t mtx;
 
 #if 0
@@ -180,6 +187,27 @@ void socket_config(int *sc, si *sa, int sa_size, char *port)
 	pthread_mutex_init(&mtx, NULL);
 }
 
+void fpga_sock_config(char *port)
+{
+	fpga_sock = socket(PF_INET, SOCK_STREAM, 0);
+
+	if(fpga_sock == -1)
+		err_handler("socket() error");
+
+	memset(&fpga_serv_addr, 0, sizeof(fpga_serv_addr));
+	fpga_serv_addr.sin_family = AF_INET;
+	fpga_serv_addr.sin_addr.s_addr = htonl(INADDR_ANY);
+	fpga_serv_addr.sin_port = htons(atoi(port));
+
+	if(bind(fpga_sock, (sp)&fpga_serv_addr, sizeof(fpga_serv_addr)) == -1)
+		err_handler("bind() error");
+
+	if(listen(fpga_sock, 1) == -1)
+		err_handler("listen() error");
+
+	fpga_addr_size = sizeof(fpga_clnt_addr);
+}
+
 void *phone_rx(void *fd)
 {
 	int len;
@@ -268,6 +296,23 @@ void *vcp_can_tx(void *fd)
 	}
 }
 
+void *fpga_rx(void *fd)
+{
+	int len, rlen;
+	char msg[BUF_SIZE] = "Success\n";
+	char data[BUF_SIZE] = {0};
+
+	len = strlen(msg);
+
+	for(;;)
+	{
+		if((rlen = read(fpga_sock, data, sizeof(data)) != 0)
+			write(fpga_sock, msg, len);
+
+		usleep(1000);
+	}
+}
+
 int main(int argc, char **argv)
 {
 	char *dev = "/dev/ttyUSB0";
@@ -299,9 +344,9 @@ int main(int argc, char **argv)
 
 	pid_t pid;
 
-	if(argc != 2)
+	if(argc != 3)
 	{
-		printf("use: %s <port>\n", argv[0]);
+		printf("use: %s <cell phone port> <fpga port>\n", argv[0]);
 		exit(1);
 	}
 
@@ -314,6 +359,8 @@ int main(int argc, char **argv)
 	printf("fd = %d\n", fd);
 
 	serial_config(fd, &newtio, sizeof(newtio), &poll_events);
+
+	fpga_sock_config(argv[2]);
 	socket_config(&serv_sock, &serv_addr, sizeof(serv_addr), argv[1]);
 
 	thread_id = pthread_create(&p_thread[0], NULL, phone_rx, NULL);
@@ -348,8 +395,16 @@ int main(int argc, char **argv)
 		exit(0);
 	}
 
+	thread_id = pthread_create(&p_thread[4], NULL, fpga_rx, NULL);
+	if(thread_id < 0)
+	{
+		perror("FPGA rx thread create error: ");
+		exit(0);
+	}
+
 	pthread_join(p_thread[0], (void **)&status);
 	pthread_join(p_thread[3], (void **)&status);
+	pthread_join(p_thread[4], (void **)&status);
 
 	return 0;
 }
