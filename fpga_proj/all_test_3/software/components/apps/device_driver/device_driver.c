@@ -25,6 +25,8 @@ socklen_t addr_size;
 char sock_buf[BUF_SIZE] = {0};
 
 unsigned char receives[8] = {0};
+int lidar_data;
+//uint16_t lidar_data;
 
 pthread_mutex_t mtx;
 
@@ -205,10 +207,10 @@ void *thread_0(void *data)
 		{
 			pthread_mutex_lock(&mtx);
 
-			if((write(clnt_sock, receives, sizeof(receives))) != 0)
+			if((write(clnt_sock, (int *)&lidar_data, sizeof(lidar_data))) != 0)
 				read(clnt_sock, (char *)&sock_buf, BUF_SIZE);
 
-			printf("sock_buf = %s\n", sock_buf);
+			printf("lidar_data = %d\n", lidar_data);
 
 			pthread_mutex_unlock(&mtx);
 
@@ -590,11 +592,10 @@ void measurement(unsigned char is_correction, unsigned char options, unsigned ch
 void display(unsigned char options, unsigned char *buf)
 {
         unsigned char i;
-		uint16_t data;
         char *strings[5] = {"Velocity", "Peak value in correlation record", "Correlation record noise floor", "Received signal strength", "Distance"};
 
         //buf[AR_FULL_DELAY_HIGH] = buf[AR_FULL_DELAY_HIGH] << 8 | buf[AR_FULL_DELAY_LOW];
-         data= buf[AR_FULL_DELAY_HIGH] << 8 | buf[AR_FULL_DELAY_LOW];
+         lidar_data= buf[AR_FULL_DELAY_HIGH] << 8 | buf[AR_FULL_DELAY_LOW];
 	//총 16비트니까 8비트 밀고 해서 사용.
 
         /*
@@ -616,7 +617,7 @@ void display(unsigned char options, unsigned char *buf)
                         break;
                 case DISTANCE_ONLY :
                        // printf("%s \t\t\t\t = %d\n", strings[4], buf[AR_FULL_DELAY_HIGH]);
-                        printf("%s \t\t\t\t = %d\n", strings[4], data);
+                        printf("%s \t\t\t\t = %d\n", strings[4], lidar_data);
                         break;
                 case DISTANCE_WITH_VELO :
                         printf("%s \t\t\t\t = %d\n", strings[0], buf[AR_VELOCITY]);
