@@ -293,7 +293,7 @@ void *fpga_rx(void *fd)
 {
 	int len, rlen;
 	char msg[BUF_SIZE] = "Success\n";
-	char data[BUF_SIZE] = {0};
+	int lidar_data = 0;
 
 	len = strlen(msg);
 
@@ -304,7 +304,7 @@ void *fpga_rx(void *fd)
 	{
 	    printf("start read\n");
 
-		if((rlen = read(fpga_sock, data, sizeof(data))) != 0)
+		if((rlen = read(fpga_sock, (int *)&lidar_data, sizeof(lidar_data))) != 0)
 			write(fpga_sock, msg, len);
 
 		printf("msg = %s\n", msg);
